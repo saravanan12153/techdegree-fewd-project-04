@@ -19,7 +19,7 @@ function createLightbox(item) {
 	else {
 		$("#lightbox").append("<div id='lightbox-item'><a href='" + lightboxLink + "'><img src='" + lightboxLink  + "'></a><h2>" + lightboxTitle  + "</h2><p>" + lightboxDescription + "</p></div>");
 	}
-	$('#lightbox, #lightbox-left, #lightbox-right').show();
+	$('#lightbox, #lightbox-extra, #lightbox-left, #lightbox-right').show();
 }
 
 // Lightbox Navigation
@@ -35,6 +35,11 @@ $('#lightbox-left').click( function(e) {
 
 $('#lightbox-right').click( function(e) {
 	navigateright();
+});
+
+
+$('#lightbox-bw').click( function(e) {
+		$("#lightbox").toggleClass("desaturate");
 });
 
 function navigateleft() {
@@ -73,7 +78,7 @@ $("#lightbox").click( function(event) {
 	$('.selected').removeClass('selected');
 	$(this).children().remove();
 	$(this).hide();
-	$('#lightbox-left, #lightbox-right').hide();
+	$('#lightbox-extra, #lightbox-left, #lightbox-right').hide();
 });
 
 // Search Function
@@ -91,7 +96,7 @@ $(document).on('keyup','#searchbox', function(e) {
 		galleryItem = ($(this).find('img').attr('title') + " " + $(this).find('img').attr('alt')).toLowerCase();
 		find = galleryItem.indexOf(substring);
 		if (find === -1) {
-			$(this).detach();
+			$(this).fadeOut(2000).detach();
 		}
 	});
 });

@@ -75,13 +75,19 @@ li {
 	padding: 0;
 	margin: 0;
 	border-radius: 3px;
-	box-shadow: 0 0 5px #888;
+	box-shadow: 0 3px 8px #777;
 	}	
+
+.desaturate { 
+	-webkit-filter: grayscale(100%);
+	filter: grayscale(100%);
+}
 
 iframe {
 	display: block;
 	width: 100%;
-	height: 500px;
+	height: 50vw;
+	max-height: 500px;
 }
 
 input[type="text"] {
@@ -107,6 +113,7 @@ input[type="text"]:focus {
 	width: 100vw;
 	height: 100vh;
 	display: none;
+	color: #fff;
 	animation: fade 500ms ease-in-out;
 }
 
@@ -139,6 +146,7 @@ input[type="text"]:focus {
 	background: rgba(255,255,255,0.5);
 	width: 50px;
 	height: 90px;
+	bottom: 50px;
 	border-radius: 5px;
 	display: none;
 	cursor: pointer;
@@ -152,7 +160,20 @@ input[type="text"]:focus {
 #lightbox-right {
 	right: 10%;
 }
-	
+
+#lightbox-extra {
+	position: fixed;
+	top: 14px;
+	width: 100%;
+	text-align: center;
+	color: #fff;
+	display: none;
+}
+
+#lightbox-extra label {
+	margin-left: 10px;
+}
+
 #lightbox-item {
 	width: 90%;
 	max-width: 800px;
@@ -163,11 +184,11 @@ input[type="text"]:focus {
 #lightbox-item img {
 	position: relative;
 	display: block;
+	z-index: 2000;
 	width: 100%;
 	border-radius: 5px;
 	animation: positionchange 500ms ease-in-out;
 	} 
-
 
 @keyframes positionchange {
 	0% {top: -1000px;}
@@ -178,7 +199,6 @@ input[type="text"]:focus {
 #lightbox-item p {
 		position: relative;
 		z-index: 2000;
-		color: #fff;
 		width: 100%;
 		margin: 0;
 		animation: fade 800ms ease-in-out;
@@ -190,6 +210,21 @@ input[type="text"]:focus {
 
 /* RESPONSIVE
 --------------------------------------------------*/
+
+@media (min-width: 480px) {
+	.wrapper {
+		width: 460px;
+	}
+
+	li {
+		float: left;
+		margin: 0 60px 60px 0;
+		}
+	
+	li:nth-child(2n+2) {
+		margin-right: 0;
+		}
+}
 
 @media (min-width: 768px) {
 	body {
@@ -209,11 +244,11 @@ input[type="text"]:focus {
 		display: inline-block;
 		}
 
-	li {
-		float: left;
-		margin: 0 60px 60px 0;
-		}
 	
+	li:nth-child(2n+2) {
+		margin-right: 60px;
+		}
+
 	li:nth-child(3n+3) {
 		margin-right: 0;
 		}
