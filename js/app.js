@@ -1,55 +1,104 @@
-$("#searchbox").show();
+// Show searchbox if JavaScript is enabled on browser
+//---------------------------------------------
 
-$(".gallery-item").click(function(event) {
-	event.preventDefault();
-	$(this).addClass("selected");
-	createLightbox($(".selected"));
-});
+$('#searchbox').show();
 
-// TOOK ME TOO LONG TO FIGURE THIS OUT.
-// MIGHT SCHEDULE A MEETING WITH A MENTOR TO
-// FIND OUT IF THERE'S AN ALTERNATIVE METHOD.
-
-$(window).keydown(function(e) {
-	var $selected = $('.selected');
-	if(e.which == 39) {
-		if($selected.is(':last-child')) {
-			$selected.removeClass("selected");
-			$(".gallery-item").first().addClass("selected");
-		} else {
-			$selected.removeClass("selected").next().addClass("selected");
-		}
-		createLightbox($(".selected"));
-	}
-	if(e.which == 37) {
-		if($selected.is(':first-child')) {
-			$selected.removeClass("selected");
-			$(".gallery-item").last().addClass("selected");
-		} else {
-			$selected.removeClass("selected").prev().addClass("selected");
-		}
-		createLightbox($(".selected"));
-	}
-});
-
-$("#lightbox").click( function(event) {
-	$('.selected').removeClass("selected");
-	$(this).children().remove();
-	$(this).hide();
-});
-
-$("#searchbox").keyup(function(e) {
-	var substring = $(this).val();
-	var galleryItem;
-	var find;
-	galleryItem = $(".gallery-item").first().find('img').attr("title") + " " +  $(".gallery-item").first().find('img').attr("alt");
-	console.log(galleryItem.indexOf(substring));
-});
+// Render Lightbox
+//---------------------------------------------
 
 function createLightbox(item) {
 	$('#lightbox').children().remove();
 	var lightboxLink = item.find('a').attr("href");
 	var lightboxTitle = item.find('img').attr("title");
 	var lightboxDescription = item.find('img').attr("alt");
-	$("#lightbox").show().append("<div id='lightbox-item'><a href='" + lightboxLink + "'><img src='" + lightboxLink  + "'></a><h2>" + lightboxTitle  + "</h2><p>" + lightboxDescription + "</p></div>");
+	var isExternal = lightboxLink.indexOf("http");
+	if (isExternal !== -1) {	
+		lightboxLink = lightboxLink.replace("watch?v=", "embed/");
+		$("#lightbox").append('<div id="lightbox-item"><iframe width="420" height="315" src="'+ lightboxLink + '?autoplay=1" frameborder="0" allowfullscreen></iframe><h2>' + lightboxTitle  + '</h2><p>' + lightboxDescription + '</p></div>');
+	}
+	else {
+		$("#lightbox").append("<div id='lightbox-item'><a href='" + lightboxLink + "'><img src='" + lightboxLink  + "'></a><h2>" + lightboxTitle  + "</h2><p>" + lightboxDescription + "</p></div>");
+	}
+	$('#lightbox, #lightbox-left, #lightbox-right').show();
 }
+
+// Lightbox Navigation
+//---------------------------------------------
+
+$(document).keydown(function(e) {
+	navigate(e);
+});
+
+$('#lightbox-left').click( function(e) {
+	navigateleft();
+});
+
+$('#lightbox-right').click( function(e) {
+	navigateright();
+});
+
+function navigateleft() {
+	var $selected = $('.selected');
+	if($selected.is(':first-child')) {
+		$selected.removeClass("selected");
+		$(".gallery-item").last().addClass("selected");
+	} else {
+		$selected.removeClass("selected").prev().addClass("selected");
+	}
+	createLightbox($(".selected"));
+}
+
+function navigateright() {
+	var $selected = $('.selected');
+	if($selected.is(':last-child')) {
+		$selected.removeClass("selected");
+		$(".gallery-item").first().addClass("selected");
+	} else {
+		$selected.removeClass("selected").next().addClass("selected");
+	}
+	createLightbox($(".selected"));
+}
+
+function navigate(e) {
+	var $selected = $('.selected');
+	if(e.which == 39) {
+		navigateright();
+	}
+	if(e.which == 37) {
+		navigateleft();
+	}
+}
+
+$("#lightbox").click( function(event) {
+	$('.selected').removeClass('selected');
+	$(this).children().remove();
+	$(this).hide();
+	$('#lightbox-left, #lightbox-right').hide();
+});
+
+// Search Function
+//---------------------------------------------
+
+var gallery = $('#gallery').html();
+
+$(document).on('keyup','#searchbox', function(e) {
+	var substring = $(this).val().toLowerCase();
+	var galleryItem;
+	var find;
+
+	$("#gallery").html(gallery);
+	$(".gallery-item").each( function() {
+		galleryItem = ($(this).find('img').attr('title') + " " + $(this).find('img').attr('alt')).toLowerCase();
+		find = galleryItem.indexOf(substring);
+		if (find === -1) {
+			$(this).detach();
+		}
+	});
+});
+
+$(document).on('click', '.gallery-item',function(event) {
+	event.preventDefault();
+	$(this).addClass('selected');
+	createLightbox($('.selected'));
+});
+
