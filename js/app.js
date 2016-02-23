@@ -96,7 +96,7 @@ $(document).on('keyup','#searchbox', function(e) {
 		galleryItem = ($(this).find('img').attr('title') + " " + $(this).find('img').attr('alt')).toLowerCase();
 		find = galleryItem.indexOf(substring);
 		if (find === -1) {
-			$(this).fadeOut(2000).detach();
+			$(this).fadeOut(200, function(){ $(this).detach()});
 		}
 	});
 });
