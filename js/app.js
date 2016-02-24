@@ -84,6 +84,7 @@ $("#lightbox").click( function(event) {
 // Search Function
 //---------------------------------------------
 
+/*
 var gallery = $('#gallery').html();
 
 $(document).on('keyup','#searchbox', function(e) {
@@ -100,6 +101,39 @@ $(document).on('keyup','#searchbox', function(e) {
 		}
 	});
 });
+*/
+
+var removedItems = [];
+
+$(document).on('keyup','#searchbox', function(e) {
+	var substring = $(this).val().toLowerCase();
+	var galleryItem;
+	var find;
+
+	$(".gallery-item").each( function() {
+		find = filter($(this), substring);
+		if (find === -1) {
+			removedItems.push($(this));
+			$(this).hide(500, function() {$(this).detach()});
+		}
+	});
+	
+	for (var i = 0; i < removedItems.length; i++) {
+		find = filter(removedItems[i], substring);
+		if (find !== -1) {
+			$('#gallery').append(removedItems[i]);
+			removedItems[i].show('slow');
+			removedItems.splice(i, 1);
+			i--;
+		}
+		console.log(removedItems.length);
+	}
+});
+
+function filter(string, substring) {
+		galleryItem = (string.find('img').attr('title') + " " + string.find('img').attr('alt')).toLowerCase();
+		return galleryItem.indexOf(substring);
+}
 
 $(document).on('click', '.gallery-item',function(event) {
 	event.preventDefault();
